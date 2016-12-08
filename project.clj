@@ -10,14 +10,17 @@
                           ["clean-prod"]]
             "build-dev"  ["do"
                           ["clean-dev"]
-                          ["cljsbuild" "once" "dev-main"]]
+                          ["cljsbuild" "once" "dev-main"]
+                          ["cljsbuild" "once" "dev-front"]]
             "build-prod" ["do"
                           ["clean-prod"]
                           ["cljsbuild" "once" "prod-main"]]
             "build-all"  ["do"
                           ["build-dev"]
                           ["build-prod"]]}
-  :profiles {:dev  {:clean-targets [:target-path "app/dev/js/main"]}
+  :profiles {:dev  {:clean-targets [:target-path
+                                    "app/dev/js/main"
+                                    "app/dev/js/front"]}
              :prod {:clean-targets [:target-path "app/prod/js/main"]}}
   :cljsbuild
   {:builds
@@ -34,4 +37,11 @@
                 :compiler {:target :nodejs
                            :output-to "app/prod/js/main/main.js"
                            :output-dir "app/prod/js/main"
-                           :optimizations :simple}}}})
+                           :optimizations :simple}}
+
+    :dev-front {:source-paths ["src/cljs/front"]
+                :compiler {:main "hello-electron.core"
+                           :output-to "app/dev/js/front/main.js"
+                           :output-dir "app/dev/js/front"
+                           :asset-path "js/front"
+                           :optimizations :none}}}})
