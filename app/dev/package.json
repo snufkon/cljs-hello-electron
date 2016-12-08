@@ -1,5 +1,5 @@
 {
   "name"    : "hello-electron",
   "version" : "0.1.0",
-  "main"    : "main.js"
+  "main"    : "js/main/main.js"
 }
