@@ -1,5 +1,6 @@
 (ns hello-electron.core
-  (:require [cljs.nodejs :as nodejs]))
+  (:require [cljs.nodejs :as nodejs]
+            [hello-electron.config :as config]))
 
 (nodejs/enable-util-print!)
 
@@ -15,9 +16,7 @@
 (defn create-window
   []
   (reset! win (BrowserWindow. (clj->js {:width 800 :height 600})))
-  (.loadURL @win (.format url (clj->js {:pathname (.join path (js* "__dirname") "../../../index.html")
-                                        :protocol "file"
-                                        :slashes true})))
+  (.loadURL @win config/index-url)
   (.openDevTools (.-webContents @win))
   (.on @win "closed" (fn []
                        ;; (println "window: closed")
