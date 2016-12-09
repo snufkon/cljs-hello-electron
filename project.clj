@@ -4,9 +4,11 @@
                  [org.clojure/clojurescript "1.9.293"]]
   :plugins [[lein-cljsbuild "1.1.4"]
             [lein-figwheel "0.5.8"]
-            [lein-sassy "1.0.7"]]
+            [lein-sassy "1.0.7"]
+            [lein-externs "0.1.6"]]
   :aliases {"figwheel-main"  ["with-profile" "figwheel-main" "figwheel" "dev-main"]
             "figwheel-front" ["with-profile" "figwheel-front" "figwheel" "dev-front"]
+            "externs-prod"   ["externs" "prod-front" "app/prod/js/externs_front.js"]
             "clean-dev"  ["clean"]
             "clean-prod" ["with-profile" "prod" "clean"]
             "clean-all"  ["do"
@@ -19,6 +21,7 @@
                           ["sass" "once"]]
             "build-prod" ["do"
                           ["clean-prod"]
+                          ["externs-prod"]
                           ["cljsbuild" "once" "prod-main"]
                           ["cljsbuild" "once" "prod-front"]
                           ["with-profile" "prod" "sass" "once"]]
@@ -73,5 +76,6 @@
     :prod-front {:source-paths ["src/cljs/front"]
                  :compiler {:output-to "app/prod/js/front/main.js"
                             :output-dir "app/prod/js/front"
-                            :optimizations :advanced}}}}
+                            :optimizations :advanced
+                            :externs ["app/prod/js/externs_front.js"]}}}}
   :figwheel {:hawk-options {:watcher :polling}})
