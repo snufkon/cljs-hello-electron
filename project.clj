@@ -2,8 +2,10 @@
   :description "Hello Electron form ClojureScript"
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/clojurescript "1.9.293"]]
-  :plugins [[lein-cljsbuild "1.1.4"]]
-  :aliases {"clean-dev"  ["clean"]
+  :plugins [[lein-cljsbuild "1.1.4"]
+            [lein-figwheel "0.5.8"]]
+  :aliases {"figwheel-front" ["with-profile" "figwheel-front" "figwheel" "dev-front"]
+            "clean-dev"  ["clean"]
             "clean-prod" ["with-profile" "prod" "clean"]
             "clean-all"  ["do"
                           ["clean-dev"]
@@ -24,7 +26,9 @@
                                     "app/dev/js/front"]}
              :prod {:clean-targets [:target-path
                                     "app/prod/js/main"
-                                    "app/prod/js/front"]}}
+                                    "app/prod/js/front"]}
+             :figwheel-front {:figwheel {:server-port 3500
+                                         :server-logfile "figwheel-front.log"}}}
   :cljsbuild
   {:builds
    {:dev-main {:source-paths ["src/cljs/main"
@@ -43,6 +47,7 @@
                            :optimizations :simple}}
 
     :dev-front {:source-paths ["src/cljs/front"]
+                :figwheel true
                 :compiler {:main "hello-electron.core"
                            :output-to "app/dev/js/front/main.js"
                            :output-dir "app/dev/js/front"
@@ -52,4 +57,5 @@
     :prod-front {:source-paths ["src/cljs/front"]
                  :compiler {:output-to "app/prod/js/front/main.js"
                             :output-dir "app/prod/js/front"
-                            :optimizations :advanced}}}})
+                            :optimizations :advanced}}}}
+  :figwheel {:hawk-options {:watcher :polling}})

@@ -1,3 +1,4 @@
 target
 app/dev/js
 app/prod/js
+figwheel-front.log
