@@ -4,3 +4,5 @@ app/prod/js
 figwheel-main.log
 figwheel-front.log
 node_modules
+app/dev/css
+app/prod/css

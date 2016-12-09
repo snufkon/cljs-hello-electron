@@ -3,7 +3,8 @@
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/clojurescript "1.9.293"]]
   :plugins [[lein-cljsbuild "1.1.4"]
-            [lein-figwheel "0.5.8"]]
+            [lein-figwheel "0.5.8"]
+            [lein-sassy "1.0.7"]]
   :aliases {"figwheel-main"  ["with-profile" "figwheel-main" "figwheel" "dev-main"]
             "figwheel-front" ["with-profile" "figwheel-front" "figwheel" "dev-front"]
             "clean-dev"  ["clean"]
@@ -14,24 +15,35 @@
             "build-dev"  ["do"
                           ["clean-dev"]
                           ["cljsbuild" "once" "dev-main"]
-                          ["cljsbuild" "once" "dev-front"]]
+                          ["cljsbuild" "once" "dev-front"]
+                          ["sass" "once"]]
             "build-prod" ["do"
                           ["clean-prod"]
                           ["cljsbuild" "once" "prod-main"]
-                          ["cljsbuild" "once" "prod-front"]]
+                          ["cljsbuild" "once" "prod-front"]
+                          ["with-profile" "prod" "sass" "once"]]
             "build-all"  ["do"
                           ["build-dev"]
                           ["build-prod"]]}
   :profiles {:dev  {:clean-targets [:target-path
                                     "app/dev/js/main"
-                                    "app/dev/js/front"]}
+                                    "app/dev/js/front"
+                                    "app/dev/css/style.css"]
+                    :sass {:src "src/scss"
+                           :dst "app/dev/css"
+                           :style :nested}}
              :prod {:clean-targets [:target-path
                                     "app/prod/js/main"
-                                    "app/prod/js/front"]}
+                                    "app/prod/js/front"
+                                    "app/prod/css/style.css"]
+                    :sass {:src "src/scss"
+                           :dst "app/prod/css"
+                           :style :compressed}}
              :figwheel-main  {:figwheel {:server-port 3500
                                          :server-logfile "figwheel-main.log"}}
              :figwheel-front {:figwheel {:server-port 3600
-                                         :server-logfile "figwheel-front.log"}}}
+                                         :server-logfile "figwheel-front.log"
+                                         :css-dirs ["app/dev/css"]}}}
   :cljsbuild
   {:builds
    {:dev-main {:source-paths ["src/cljs/main"
