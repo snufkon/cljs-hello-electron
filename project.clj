@@ -14,14 +14,17 @@
                           ["cljsbuild" "once" "dev-front"]]
             "build-prod" ["do"
                           ["clean-prod"]
-                          ["cljsbuild" "once" "prod-main"]]
+                          ["cljsbuild" "once" "prod-main"]
+                          ["cljsbuild" "once" "prod-front"]]
             "build-all"  ["do"
                           ["build-dev"]
                           ["build-prod"]]}
   :profiles {:dev  {:clean-targets [:target-path
                                     "app/dev/js/main"
                                     "app/dev/js/front"]}
-             :prod {:clean-targets [:target-path "app/prod/js/main"]}}
+             :prod {:clean-targets [:target-path
+                                    "app/prod/js/main"
+                                    "app/prod/js/front"]}}
   :cljsbuild
   {:builds
    {:dev-main {:source-paths ["src/cljs/main"
@@ -44,4 +47,9 @@
                            :output-to "app/dev/js/front/main.js"
                            :output-dir "app/dev/js/front"
                            :asset-path "js/front"
-                           :optimizations :none}}}})
+                           :optimizations :none}}
+
+    :prod-front {:source-paths ["src/cljs/front"]
+                 :compiler {:output-to "app/prod/js/front/main.js"
+                            :output-dir "app/prod/js/front"
+                            :optimizations :advanced}}}})
