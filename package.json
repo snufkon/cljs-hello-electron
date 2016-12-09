@@ -1,0 +1,8 @@
+{
+  "name": "hello-electron",
+  "version": "0.0.0",
+  "description": "",
+  "devDependencies": {
+    "ws": "^1.1.1"
+  }
+}

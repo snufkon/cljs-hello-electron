@@ -4,39 +4,56 @@
 
 (nodejs/enable-util-print!)
 
-(defonce path          (js/require "path"))
-(defonce url           (js/require "url"))
-
 (defonce electron      (js/require "electron"))
 (defonce app           (.-app electron))
 (defonce BrowserWindow (.-BrowserWindow electron))
 
-(def win (atom nil))
+(defonce win (atom nil))
 
-(defn create-window
+(defn- create-window
   []
-  (reset! win (BrowserWindow. (clj->js {:width 800 :height 600})))
+  (reset! win (BrowserWindow. (clj->js {:width 800 :height 600 :show false})))
   (.loadURL @win config/index-url)
   (.openDevTools (.-webContents @win))
   (.on @win "closed" (fn []
                        ;; (println "window: closed")
-                       (reset! win nil))))
+                       (reset! win nil)))
+  (.on @win "ready-to-show" (fn []
+                              ;; (println "window: ready-to-show")
+                              (.showInactive @win))))
 
-(defn -main [& args]
-  (.on app "ready" (fn []
-                     ;; (println "app: ready")
-                     (create-window)))
-  
+(defn- destroy-window
+  []
+  (.destroy @win)
+  (reset! win nil))
+
+(defn- remove-listeners
+  []
+  (.removeAllListeners app "ready")
+  (.removeAllListeners app "activate")
+  (.removeAllListeners app "window-all-closed"))
+
+(defn- add-listeners
+  []
+  (.on app "ready" create-window)
+  (.on app "activate" (fn []
+                        ;;(println "app: activate")
+                        (when-not @win
+                          (create-window))))
   (.on app "window-all-closed"
      (fn []
        ;; (println "app: window-all-closed")
        (when (not= (.-platform nodejs/process) "darwin")
-         (.quit app))))
-  
-  (.on app "activate"
-     (fn []
-       ;; (println "app: activate")
-       (when-not @win
-         (create-window)))))
+         (.quit app)))))
+
+(defn -main [& args]
+  (add-listeners))
+
+(defn reload
+  []
+  (remove-listeners)
+  (add-listeners)
+  (destroy-window)
+  (create-window))
 
 (set! *main-cli-fn* -main)

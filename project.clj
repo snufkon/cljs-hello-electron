@@ -4,7 +4,8 @@
                  [org.clojure/clojurescript "1.9.293"]]
   :plugins [[lein-cljsbuild "1.1.4"]
             [lein-figwheel "0.5.8"]]
-  :aliases {"figwheel-front" ["with-profile" "figwheel-front" "figwheel" "dev-front"]
+  :aliases {"figwheel-main"  ["with-profile" "figwheel-main" "figwheel" "dev-main"]
+            "figwheel-front" ["with-profile" "figwheel-front" "figwheel" "dev-front"]
             "clean-dev"  ["clean"]
             "clean-prod" ["with-profile" "prod" "clean"]
             "clean-all"  ["do"
@@ -27,12 +28,15 @@
              :prod {:clean-targets [:target-path
                                     "app/prod/js/main"
                                     "app/prod/js/front"]}
-             :figwheel-front {:figwheel {:server-port 3500
+             :figwheel-main  {:figwheel {:server-port 3500
+                                         :server-logfile "figwheel-main.log"}}
+             :figwheel-front {:figwheel {:server-port 3600
                                          :server-logfile "figwheel-front.log"}}}
   :cljsbuild
   {:builds
    {:dev-main {:source-paths ["src/cljs/main"
                               "src/cljs/dev-main"]
+               :figwheel {:on-jsload "hello-electron.core/reload"}
                :compiler {:target :nodejs
                           :main "hello-electron.core"
                           :output-to "app/dev/js/main/main.js"

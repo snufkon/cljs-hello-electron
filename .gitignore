@@ -1,4 +1,6 @@
 target
 app/dev/js
 app/prod/js
+figwheel-main.log
 figwheel-front.log
+node_modules
